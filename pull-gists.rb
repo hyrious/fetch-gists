@@ -36,10 +36,12 @@ def q query
   return ret.data
 end
 
-def download_gists_json
+def download_gists_json user=nil
   gists = []
-  user = (q %{ viewer { login } }).viewer.login
-  puts "login: #{user}"
+  if user.nil?
+    user = (q %{ viewer { login } }).viewer.login
+    puts "login: #{user}"
+  end
   endCursor = nil
   hasNextPage = true
   while hasNextPage
@@ -68,14 +70,14 @@ ensure
   @client.close
 end
 
-download_gists_json unless File.exist? 'gists.json'
+download_gists_json(ARGV[0]) unless File.exist? 'gists.json'
 gists = h2o JSON.parse File.read 'gists.json'
 queue = Queue.new
 num_workers = Etc.nprocessors
 threads = Array.new(num_workers) { |i|
   Thread.new {
     until (h = queue.pop) == :END
-      folder = h.url[/\h{32}/]
+      folder = h.url[24..-1]
       next if Dir.exist? folder
       puts "[#{i}] #{folder[0, 8]} #{h.description}"
       proxy = '-c http.proxy=http://localhost:1080'

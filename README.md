@@ -12,6 +12,7 @@ gem install http midori
 
 ```shell
 ruby pull-gists.rb
+ruby pull-gists.rb somebody
 ```
 
 ### Start a HTTP Server to View Gists

@@ -3,6 +3,16 @@ require 'openssl'
 require 'midori'
 require 'json'
 
+if ARGV.include?('pack')
+  require 'fileutils'
+  Dir.mkdir 'pack'
+  j = JSON.parse File.read('gists.json')
+  j.each { |e| FileUtils.mv e['url'].slice(24, 32), 'pack' }
+  FileUtils.mv 'gists.json', 'pack'
+  FileUtils.cp __FILE__, 'pack'
+  exit
+end
+
 def json x
   x = JSON.generate x unless String === x
   Midori::Response.new(status: 200,

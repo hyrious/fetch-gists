@@ -5,7 +5,7 @@ Ruby script to fetch my gist snippets and view them locally.
 ### Prerequisites
 
 ```shell
-gem install http midori
+gem install http midori.rb
 ```
 
 ### Clone All Gists
